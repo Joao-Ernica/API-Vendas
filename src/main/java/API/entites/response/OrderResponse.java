@@ -1,0 +1,16 @@
+package API.entites.response;
+
+import API.entites.enums.OrderStatus;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+public class OrderResponse {
+
+	private OrderStatus status;
+}
