@@ -22,6 +22,7 @@ public class OrderController {
 	@Autowired
 	private final OrderService service;
 
+	@GetMapping
 	public List<OrderResponse> findAll(){
 		List<Order> all = service.findAll();
 		return mapping.toOrderResponseList(all);
@@ -33,11 +34,19 @@ public class OrderController {
 		return mapping.toOrderResponse(byId);
 	}
 
-	@PutMapping
+	@PostMapping
 	public OrderResponse insert (@RequestBody OrderRequest request){
 		Order order = mapping.toOrder(request);
 		Order insert = service.insert(order);
 		return mapping.toOrderResponse(insert);
+	}
+
+	@PutMapping("{id}")
+	public OrderResponse update(@PathVariable Long id, @RequestBody OrderRequest obj){
+		Order order = mapping.toOrder(obj);
+		Order update = service.update(id, order);
+		return mapping.toOrderResponse(update);
+
 	}
 
 }

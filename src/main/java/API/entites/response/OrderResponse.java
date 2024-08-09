@@ -12,5 +12,7 @@ import lombok.Setter;
 @Getter
 public class OrderResponse {
 
+	private Long id;
+
 	private OrderStatus status;
 }
