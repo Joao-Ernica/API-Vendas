@@ -8,6 +8,7 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -25,15 +26,22 @@ public class OrderItem implements Serializable {
 	private OrderItemPk id = new OrderItemPk();
 
 	private Integer quantity;
-	private Double price;
+	private BigDecimal price;
+	private BigDecimal total;
 
 	@Builder
 	// até onde vi, o lombok não consegue colocar os ids no contrutor, por isso fiz manualmente
-	public OrderItem(Order order, Product product, Integer quantity, Double price) {
+	public OrderItem(Order order, Product product, Integer quantity, BigDecimal price, BigDecimal total) {
 		id.setOrder(order);
 		id.setProduct(product);
 		this.quantity = quantity;
 		this.price = price;
+		this.total = calculoTotal();
+	}
+
+	public BigDecimal calculoTotal(){
+		//utilizei BigDecimal por ser mais preciso e ja possuir os metodos necessarios
+		return price.multiply(new BigDecimal(quantity));
 	}
 
 }

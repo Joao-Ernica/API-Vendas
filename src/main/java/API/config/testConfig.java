@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -124,45 +126,47 @@ public class testConfig implements CommandLineRunner {
 		var or2 = Order.builder().status(OrderStatus.EM_TRASPORTE).user(u2).build();
 		var or3 = Order.builder().status(OrderStatus.ENTREGUE).user(u2).build();
 
-		orderRepository.saveAll(Arrays.asList(or, or1, or2, or3));
-
 		var oi = OrderItem.builder()
 				.order(or)
 				.product(pr)
 				.quantity(1)
-				.price(pr.getPrice())
+				.price(BigDecimal.valueOf(pr.getPrice()))
 				.build();
 
 		var oi1 = OrderItem.builder()
 				.order(or1)
 				.product(pr2)
 				.quantity(2)
-				.price(pr2.getPrice())
+				.price(BigDecimal.valueOf(pr2.getPrice()))
 				.build();
 
 		var oi2 = OrderItem.builder()
 				.order(or2)
 				.product(pr1)
 				.quantity(5)
-				.price(pr1.getPrice())
+				.price(BigDecimal.valueOf(pr1.getPrice()))
 				.build();
 
 		var oi3 = OrderItem.builder()
 				.order(or3)
 				.product(pr3)
 				.quantity(3)
-				.price(pr3.getPrice())
+				.price(BigDecimal.valueOf(pr3.getPrice()))
 				.build();
 
+		var pay = Payment.builder().order(or).data(LocalDateTime.now()).build();
+		var pay1 = Payment.builder().order(or1).data(LocalDateTime.now()).build();
+		var pay2 = Payment.builder().order(or2).data(LocalDateTime.now()).build();
+		var pay3 = Payment.builder().order(or3).data(LocalDateTime.now()).build();
+
+		or.setPayment(pay);
+		or1.setPayment(pay1);
+		or2.setPayment(pay2);
+		or3.setPayment(pay3);
+
+		orderRepository.saveAll(Arrays.asList(or, or1, or2, or3));
 		orderItemRepository.saveAll(Arrays.asList(oi, oi1, oi2, oi3));
-
-
-//		var pay1 = Payment.builder().order(or1).build();
-//		var pay2 = Payment.builder().order(or2).build();
-//		var pay3 = Payment.builder().order(or3).build();
-//
-//		paymentRepository.saveAll(Arrays.asList(pay1, pay2, pay3));
-
+		paymentRepository.saveAll(Arrays.asList(pay, pay1, pay2, pay3));
 
 	}
 }
