@@ -2,6 +2,7 @@ package API.entites.pk;
 
 import API.entites.Order;
 import API.entites.Product;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import java.io.Serializable;
 @Setter
 @EqualsAndHashCode
 @Embeddable //que a classe é incorporada por outras classes //como se fosse parte da mesma classe
+@JsonIgnoreProperties("order")
 public class OrderItemPk implements Serializable {
 
 	@Serial

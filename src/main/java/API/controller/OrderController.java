@@ -37,7 +37,7 @@ public class OrderController {
 	@PostMapping
 	public OrderResponse insert (@RequestBody OrderRequest request){
 		Order order = mapping.toOrder(request);
-		Order insert = service.insert(order);
+		Order insert = service.insert(request);
 		return mapping.toOrderResponse(insert);
 	}
 

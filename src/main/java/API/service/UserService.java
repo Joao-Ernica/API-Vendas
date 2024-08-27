@@ -19,7 +19,7 @@ public class UserService {
 		return repository.findAll();
 	}
 
-	public User findById(String CPF){
+	public User findByCPF(String CPF){
 		return repository.findById(CPF).orElseThrow(()
 				-> new IllegalArgumentException("CPF não encontrado"));
 	}

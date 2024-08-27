@@ -3,6 +3,7 @@ package API.entites;
 import API.entites.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -41,7 +42,6 @@ public class Order implements Serializable {
 	private OrderStatus status;
 
 	@ManyToOne
-	@Getter(onMethod = @__({@JsonIgnore}))
 	@JoinColumn(name = "user_CPF")
 	private User user;
 
@@ -50,4 +50,15 @@ public class Order implements Serializable {
 
 	@OneToMany(mappedBy = "id.order")
 	private Set<OrderItem> items = new HashSet<>();
+
+	public void addItem(OrderItem item) {
+		items.add(item);
+		item.setOrder(this);
+	}
+
+	public void addItems(Set<OrderItem> items) {
+		for (OrderItem item : items) {
+			addItem(item);
+		}
+	}
 }

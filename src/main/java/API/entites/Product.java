@@ -33,6 +33,14 @@ public class Product implements Serializable {
 	private Set<Category> categories = new HashSet<>();
 
 	@OneToMany(mappedBy = "id.product") //Jpa entende que deve usar o OrderItem como intermediario
-	private final Set<OrderItem> items = new HashSet<>();
+	private Set<OrderItem> items = new HashSet<>();
+
+	public Set<Order> getOrderns(){ //encontra os valores Order dentro do Orderitem e retorna quando é chamado
+		Set<Order> set = new HashSet<>();
+		for(OrderItem x : items){
+			set.add(x.getOrder());
+		}
+		return set;
+	}
 
 }

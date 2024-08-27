@@ -33,7 +33,7 @@ public class UserController {
 
 	@GetMapping("{CPF}")
 	public UserResponse findById(@PathVariable String CPF){
-		User byCPF = service.findById(CPF);
+		User byCPF = service.findByCPF(CPF);
 		return mapping.toUserResponse(byCPF);
 	}
 }
