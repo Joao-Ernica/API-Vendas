@@ -2,8 +2,6 @@ package API.entites;
 
 import API.entites.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -13,6 +11,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -35,7 +34,7 @@ public class Order implements Serializable {
 
 	@CreatedDate
 	@JsonFormat(pattern = "dd-MM-yyyy")
-	@Column(updatable = false)
+	@Column(updatable = false) // não pode ser alterado  apos a criação
 	private LocalDate date;
 
 	@Enumerated(EnumType.STRING)
@@ -56,9 +55,13 @@ public class Order implements Serializable {
 		item.setOrder(this);
 	}
 
-	public void addItems(Set<OrderItem> items) {
-		for (OrderItem item : items) {
-			addItem(item);
+	public void addItems(List<OrderItem> newItems) {
+		for (OrderItem item : newItems) {
+			if (!items.contains(item)) {
+				item.setOrder(this);
+				addItem(item);
+			}
 		}
 	}
+
 }

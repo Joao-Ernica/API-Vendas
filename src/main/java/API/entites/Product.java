@@ -6,6 +6,8 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.text.Bidi;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,7 +29,7 @@ public class Product implements Serializable {
 
 	private String name;
 	private String description;
-	private Double price;
+	private BigDecimal price;
 
 	@ManyToMany
 	private Set<Category> categories = new HashSet<>();

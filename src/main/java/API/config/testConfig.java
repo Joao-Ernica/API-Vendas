@@ -43,7 +43,7 @@ public class testConfig implements CommandLineRunner {
 	public void run(String... args) {
 
 		var u1 = User.builder()
-				.CPF("01234567890")
+				.Cpf("01234567890")
 				.name("joao")
 				.phone("12345678")
 				.email("joao@hotmail.com")
@@ -51,7 +51,7 @@ public class testConfig implements CommandLineRunner {
 				.build();
 
 		var u2 = User.builder()
-				.CPF("09876543210")
+				.Cpf("09876543210")
 				.name("ana")
 				.phone("87654321")
 				.email("ana@hotmail.com")
@@ -71,35 +71,35 @@ public class testConfig implements CommandLineRunner {
 		var pr = Product.builder()
 				.name("Trilogia, O Senhor dos Aneis")
 				.description("Uma obra prima escrita por J.R.R Tolkien")
-				.price(159.69)
+				.price(BigDecimal.valueOf(159.69))
 				.categories(Set.of(cat, cat1))
 				.build();
 
 		var pr1 = Product.builder()
 				.name("Harry Potter e a Pedra Filosofal")
 				.description("Primeiro livro da série Harry Potter, escrito por J.K. Rowling")
-				.price(49.90)
+				.price(BigDecimal.valueOf(49.90))
 				.categories(Set.of(cat1))
 				.build();
 
 		var pr2 = Product.builder()
 				.name("Duna")
 				.description("Um clássico da ficção científica, escrito por Frank Herbert")
-				.price(89.90)
+				.price(BigDecimal.valueOf(89.90))
 				.categories(Set.of(cat2))
 				.build();
 
 		var pr3 = Product.builder()
 				.name("O Hobbit")
 				.description("Aventuras de Bilbo Bolseiro, escrito por J.R.R. Tolkien")
-				.price(59.90)
+				.price(BigDecimal.valueOf(59.90))
 				.categories(Set.of(cat2))
 				.build();
 
 		var pr4 = Product.builder()
 				.name("As Crônicas de Nárnia")
 				.description("Uma série de fantasia escrita por C.S. Lewis")
-				.price(99.90)
+				.price(BigDecimal.valueOf(99.90))
 				.categories(Set.of(cat1))
 				.build();
 
@@ -107,14 +107,14 @@ public class testConfig implements CommandLineRunner {
 		var pr5 = Product.builder()
 				.name("O Nome do Vento")
 				.description("Uma obra de fantasia e aventura escrita por Patrick Rothfuss")
-				.price(59.90)
+				.price(BigDecimal.valueOf(59.90))
 				.categories(Set.of(cat, cat1))
 				.build();
 
 		var pr6 = Product.builder()
 				.name("Jogos Vorazes")
 				.description("Uma série de ficção científica e aventura escrita por Suzanne Collins")
-				.price(49.90)
+				.price(BigDecimal.valueOf(49.90))
 				.categories(Set.of(cat1, cat2))
 				.build();
 
@@ -130,28 +130,28 @@ public class testConfig implements CommandLineRunner {
 				.order(or)
 				.product(pr)
 				.quantity(1)
-				.price(BigDecimal.valueOf(pr.getPrice()))
+				.price(pr.getPrice()) // já retornando BigDecimal
 				.build();
 
 		var oi1 = OrderItem.builder()
 				.order(or1)
 				.product(pr2)
 				.quantity(2)
-				.price(BigDecimal.valueOf(pr2.getPrice()))
+				.price(pr2.getPrice()) // já retornando BigDecimal
 				.build();
 
 		var oi2 = OrderItem.builder()
 				.order(or2)
 				.product(pr1)
 				.quantity(5)
-				.price(BigDecimal.valueOf(pr1.getPrice()))
+				.price(pr1.getPrice()) // já retornando BigDecimal
 				.build();
 
 		var oi3 = OrderItem.builder()
 				.order(or3)
 				.product(pr3)
 				.quantity(3)
-				.price(BigDecimal.valueOf(pr3.getPrice()))
+				.price(pr3.getPrice()) // já retornando BigDecimal
 				.build();
 
 		var pay = Payment.builder().order(or).data(LocalDateTime.now()).build();

@@ -22,7 +22,6 @@ public class OrderItem implements Serializable {
 	@EmbeddedId
 	@EqualsAndHashCode.Include
 	@Getter(AccessLevel.NONE)
-	@Setter(AccessLevel.NONE)
 	private OrderItemPk id = new OrderItemPk();
 
 	private Integer quantity;
@@ -30,8 +29,7 @@ public class OrderItem implements Serializable {
 	private BigDecimal total;
 
 	@Builder
-	// até onde vi, o lombok não consegue colocar os ids no contrutor, por isso fiz manualmente
-	public OrderItem(Order order, Product product, Integer quantity, BigDecimal price, BigDecimal total) {
+	public OrderItem(Order order, Product product, Integer quantity, BigDecimal price) {
 		this.id.setOrder(order);
 		this.id.setProduct(product);
 		this.quantity = quantity;
@@ -39,10 +37,15 @@ public class OrderItem implements Serializable {
 		this.total = calculoTotal();
 	}
 
-	public BigDecimal calculoTotal(){
-		//utilizei BigDecimal por ser mais preciso e ja possuir os metodos necessarios
+
+	public BigDecimal calculoTotal(){//utilizei BigDecimal por ser mais preciso e ja possuir os metodos necessarios
 		return price.multiply(new BigDecimal(quantity));
 	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+		this.total = calculoTotal();
+		}
 
 	@JsonIgnore
 	public Order getOrder() {

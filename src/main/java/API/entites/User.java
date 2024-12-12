@@ -23,7 +23,8 @@ public class User implements Serializable {
 	@Id
 	@EqualsAndHashCode.Include
 	@Setter(AccessLevel.NONE)
-	private String CPF;
+	@Column(unique = true, nullable = false)
+	private String Cpf;
 
 	private String name;
 	private String email;

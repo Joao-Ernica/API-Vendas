@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserRequest {
 
-	private String CPF;
+	private String Cpf;
 	private String name;
 	private String email;
 	private String phone;

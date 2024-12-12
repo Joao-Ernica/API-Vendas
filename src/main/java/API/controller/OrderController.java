@@ -1,8 +1,11 @@
 package API.controller;
 
 import API.entites.Order;
+import API.entites.OrderItem;
+import API.entites.request.OrderItemRequest;
 import API.entites.request.OrderRequest;
 import API.entites.response.OrderResponse;
+import API.mapper.OrderItemMapping;
 import API.mapper.OrderMapping;
 import API.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +21,9 @@ public class OrderController {
 
 	@Autowired
 	private final OrderMapping mapping;
+
+	@Autowired
+	private final OrderItemMapping orderItemMapping;
 
 	@Autowired
 	private final OrderService service;
@@ -47,6 +53,13 @@ public class OrderController {
 		Order update = service.update(id, order);
 		return mapping.toOrderResponse(update);
 
+	}
+
+	@PutMapping("/{orderId}/addNewItems")
+	public OrderResponse addNewItems(@PathVariable Long orderId, @RequestBody List<OrderItemRequest> newItems){
+		List<OrderItem> orderItems = orderItemMapping.toOrderItemList(newItems);
+		Order order = service.addNewItems(orderId, orderItems);
+		return mapping.toOrderResponse(order);
 	}
 
 }

@@ -1,12 +1,10 @@
 package API.entites.request;
 
-import API.entites.User;
 import API.entites.enums.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.util.Set;
 
 @AllArgsConstructor
