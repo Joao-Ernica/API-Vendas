@@ -43,7 +43,7 @@ public class OrderController {
 	@PostMapping
 	public OrderResponse insert (@RequestBody OrderRequest request){
 		Order order = mapping.toOrder(request);
-		Order insert = service.insert(request);
+		Order insert = service.insert(order, request.getUserCpf());
 		return mapping.toOrderResponse(insert);
 	}
 

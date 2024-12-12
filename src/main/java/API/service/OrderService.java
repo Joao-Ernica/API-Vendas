@@ -4,9 +4,6 @@ import API.entites.Order;
 import API.entites.OrderItem;
 import API.entites.Product;
 import API.entites.User;
-import API.entites.pk.OrderItemPk;
-import API.entites.request.OrderItemRequest;
-import API.entites.request.OrderRequest;
 import API.repository.OrderItemRepository;
 import API.repository.OrderRepository;
 import API.repository.ProductRepository;
@@ -16,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -43,89 +38,30 @@ public class OrderService {
 				-> new IllegalArgumentException("Id não encontrado"));
 	}
 
-//	public Order insert(OrderRequest orderRequest) {
-//		// Buscar o usuário pelo CPF
-//		String cpf = orderRequest.getUserCpf();
-//		User user = userRepository.findById(cpf).orElseThrow(
-//				() -> new IllegalArgumentException(" Usuário não encontrado"));
-//
-//		// Criar um novo pedido e associar o usuário
-//		Order order = new Order();
-//		order.setUser(user);
-//
-//		// Inicializar e adicionar os itens ao pedido
-//		Set<OrderItem> items = orderRequest.getItems().stream().map(itemRequest -> {
-//			Product product = productRepository.findById(itemRequest.getProductId()).orElseThrow(
-//					() -> new IllegalArgumentException("Produto não existe"));
-//
-//			return OrderItem.builder()
-//					.order(order)
-//					.product(product)
-//					.quantity(itemRequest.getQuantity())
-//					.price(product.getPrice())
-//					.build();
-//		}).collect(Collectors.toSet());
-//
-//		// Associar os itens ao pedido
-//		order.setItems(items);
-//
-//		// Salvar o pedido inicial para gerar o ID
-//		Order savedOrder = repository.save(order);
-//
-//		// Salvar e atualizar itens do pedido com os dados do produto
-//		savedOrder.getItems().forEach(item -> {
-//			Product product = productRepository.findById(item.getProduct().getId()).orElseThrow(
-//					() -> new IllegalArgumentException("Produto não existe"));
-//
-//			item.setProduct(product);
-//			item.setPrice(product.getPrice());
-//			item.setOrder(savedOrder);
-//			itemRepository.save(item);
-//		});
-//
-//		// Retornar o pedido salvo e atualizado com os itens
-//		return repository.save(savedOrder);
-//	}
+	/*
+		//tentei de tudo, a unica solução que encotrei foi separar o Cpf ates de ir pro service
+		ou mandar o OrderRequest para o service
+	*/
 
-	public Order insert(OrderRequest orderRequest) {
-		// Buscar o usuário pelo CPF
-		User user = userRepository.findById(orderRequest.getUserCpf()).orElseThrow(()
-				-> new IllegalArgumentException(orderRequest.getUserCpf() + " Usuário não encontrado"));
+	public Order insert(Order order, String userCpf) {
+		User user = userRepository.findById(userCpf).orElseThrow(
+				() -> new IllegalArgumentException(userCpf + " Usuário não encontrado"));
 
-		// Criar um novo pedido e associar o usuário
-		Order order = new Order();
-		order.setUser(user);
+		//salvar primeiro para gerar o id do Order para os OrderItems		order.setUser(user);
+		Order save = repository.save(order);
 
-		// Inicializar e adicionar os itens ao pedido
-		Set<OrderItem> items = orderRequest.getItems().stream().map(itemRequest -> {
-			Product product = productRepository.findById(itemRequest.getProductId()).orElseThrow(()
-					-> new IllegalArgumentException("Produto não existe"));
-
-			return OrderItem.builder()
-					.order(order)
-					.product(product)
-					.quantity(itemRequest.getQuantity())
-					.price(product.getPrice())
-					.build();
-		}).collect(Collectors.toSet());
-
-		order.setItems(items);
-
-		// Salvar o pedido e itens em uma única operação
-		Order savedOrder = repository.save(order);
-		savedOrder.getItems().forEach(item -> {
+		//.forEach deixa o codigo mais simples, não colocando diretamente o for
+		save.getItems().forEach(item -> {
 			Product product = productRepository.findById(item.getProduct().getId()).orElseThrow(
 					() -> new IllegalArgumentException("Produto não existe"));
 
 			item.setProduct(product);
 			item.setPrice(product.getPrice());
-			item.setOrder(savedOrder);
+			item.setOrder(save);
+			itemRepository.save(item);
 		});
 
-		itemRepository.saveAll(savedOrder.getItems());
-
-		// Retornar o pedido salvo e atualizado com os itens
-		return savedOrder;
+		return repository.save(save);
 	}
 
 	public Order update(Long id, Order obj){
@@ -139,31 +75,28 @@ public class OrderService {
 		Order order = repository.findById(orderId).orElseThrow(
 				() -> new IllegalArgumentException("Pedido não encontrado"));
 
-		//verifica se existe produtos iguais
-		for (OrderItem newItem : newItems) {
+
+		for (OrderItem Item : newItems) {
 			OrderItem existingItem = order.getItems().stream()
-					.filter(item -> item.getProduct().getId().equals(newItem.getProduct().getId()))
+					.filter(item -> item.getProduct().getId().equals(Item.getProduct().getId()))
 					.findFirst()
 					.orElse(null);
 
 			if (existingItem != null) {
-				existingItem.setQuantity(existingItem.getQuantity() + newItem.getQuantity());
+				existingItem.setQuantity(existingItem.getQuantity() + Item.getQuantity());
 			} else {
-				Product product = productRepository.findById(newItem.getProduct().getId()).orElseThrow(
+				Product product = productRepository.findById(Item.getProduct().getId()).orElseThrow(
 						() -> new IllegalArgumentException("Produto não existe"));
 
-				newItem.setProduct(product);
-				newItem.setPrice(product.getPrice());
-				newItem.setOrder(order); // Garante o vínculo entre eles
-				itemRepository.save(newItem);
+				Item.setProduct(product);
+				Item.setPrice(product.getPrice());
+				Item.setOrder(order); // Garante o vínculo entre eles
+				itemRepository.save(Item);
 
-				order.getItems().add(newItem); // Adiciona o item na lista do pedido
+				order.getItems().add(Item); // Adiciona o item na lista do pedido
 			}
 		}
 
 		return repository.save(order);
 	}
-
-
-
 }
