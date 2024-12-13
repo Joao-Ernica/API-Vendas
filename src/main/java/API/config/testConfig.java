@@ -43,7 +43,7 @@ public class testConfig implements CommandLineRunner {
 	public void run(String... args) {
 
 		var u1 = User.builder()
-				.Cpf("01234567890")
+				.cpf("01234567890")
 				.name("joao")
 				.phone("12345678")
 				.email("joao@hotmail.com")
@@ -51,7 +51,7 @@ public class testConfig implements CommandLineRunner {
 				.build();
 
 		var u2 = User.builder()
-				.Cpf("09876543210")
+				.cpf("09876543210")
 				.name("ana")
 				.phone("87654321")
 				.email("ana@hotmail.com")

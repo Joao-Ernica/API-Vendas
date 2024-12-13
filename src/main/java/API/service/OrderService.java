@@ -9,6 +9,7 @@ import API.repository.OrderItemRepository;
 import API.repository.OrderRepository;
 import API.repository.ProductRepository;
 import API.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,27 +48,32 @@ public class OrderService {
 		User user = userRepository.findById(userCpf).orElseThrow(
 				() -> new IllegalArgumentException(userCpf + " Usuário não encontrado"));
 
-		//salvar primeiro para gerar o id do Order para os OrderItems
 		order.setUser(user);
-		Order save = repository.save(order);
 
-		//.forEach deixa o codigo mais simples, não colocando diretamente o for
-		save.getItems().forEach(item -> {
-
+		for (OrderItem item : order.getItems()) {
 			Product product = productRepository.findById(item.getProduct().getId()).orElseThrow(
 					() -> new IllegalArgumentException("Produto não existe"));
-			
+
 			product.removeStock(item.getQuantity());
+		}
+
+		Order savedOrder = repository.save(order);
+
+		for (OrderItem item : savedOrder.getItems()) {
+			Product product = productRepository.findById(item.getProduct().getId()).orElseThrow(
+					() -> new IllegalArgumentException("Produto não existe"));
+
 			productRepository.save(product);
 
 			item.setProduct(product);
 			item.setPrice(product.getPrice());
-			item.setOrder(save);
+			item.setOrder(savedOrder);
 			itemRepository.save(item);
-		});
+		}
 
-		return repository.save(save);
+		return savedOrder;
 	}
+
 
 	public Order update(Long orderId, List<OrderItem> updatedItems) {
 		Order order = repository.findById(orderId).orElseThrow(
@@ -135,6 +141,14 @@ public class OrderService {
 		}
 
 		return repository.save(order);
+	}
+
+	public List<Order> findByUserCpf(String cpf){
+		try {
+			return  repository.findByUserCpf(cpf);
+		}catch (EntityNotFoundException e){
+			throw new IllegalArgumentException("Usuario não encotrado");
+		}
 	}
 
 }

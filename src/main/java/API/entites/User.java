@@ -24,7 +24,7 @@ public class User implements Serializable {
 	@EqualsAndHashCode.Include
 	@Setter(AccessLevel.NONE)
 	@Column(unique = true, nullable = false)
-	private String Cpf;
+	private String cpf;
 
 	private String name;
 	private String email;
