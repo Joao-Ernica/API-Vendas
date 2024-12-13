@@ -4,11 +4,11 @@ import API.entites.Order;
 import API.entites.OrderItem;
 import API.entites.Product;
 import API.entites.User;
+import API.entites.enums.OrderStatus;
 import API.repository.OrderItemRepository;
 import API.repository.OrderRepository;
 import API.repository.ProductRepository;
 import API.repository.UserRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,13 +47,18 @@ public class OrderService {
 		User user = userRepository.findById(userCpf).orElseThrow(
 				() -> new IllegalArgumentException(userCpf + " Usuário não encontrado"));
 
-		//salvar primeiro para gerar o id do Order para os OrderItems		order.setUser(user);
+		//salvar primeiro para gerar o id do Order para os OrderItems
+		order.setUser(user);
 		Order save = repository.save(order);
 
 		//.forEach deixa o codigo mais simples, não colocando diretamente o for
 		save.getItems().forEach(item -> {
+
 			Product product = productRepository.findById(item.getProduct().getId()).orElseThrow(
 					() -> new IllegalArgumentException("Produto não existe"));
+			
+			product.removeStock(item.getQuantity());
+			productRepository.save(product);
 
 			item.setProduct(product);
 			item.setPrice(product.getPrice());
@@ -64,39 +69,72 @@ public class OrderService {
 		return repository.save(save);
 	}
 
-	public Order update(Long id, Order obj){
-			Order byId = repository.findById(id).orElseThrow(()
-					-> new IllegalArgumentException("Pedido não encontrado"));
-			BeanUtils.copyProperties(obj, byId, "id");
-			return repository.save(byId);
+	public Order update(Long orderId, List<OrderItem> updatedItems) {
+		Order order = repository.findById(orderId).orElseThrow(
+				() -> new IllegalArgumentException("Pedido não encontrado"));
+
+		if(order.getStatus() != OrderStatus.AGUARDANDO_PAGAMENTO){
+			throw new IllegalArgumentException("Pagamento já efetuado, gerar um novo pedido");
+		}
+
+		for (OrderItem item : updatedItems) {
+			OrderItem checkItem = order.getItems().stream()
+					.filter(orderItem -> orderItem.getProduct().getId().equals(item.getProduct().getId()))
+					.findFirst() //não precisa percorrer tudo já que existe apenas um Id para cada produto
+					.orElseThrow(() -> new IllegalArgumentException("Item não encontrado no pedido"));
+
+			int difference = item.getQuantity() - checkItem.getQuantity();
+			
+			Product product = productRepository.findById(item.getProduct().getId()).orElseThrow(
+					() -> new IllegalArgumentException("Produto não existe"));
+
+			if (difference > 0) {
+				product.removeStock(difference);
+			} else if (difference < 0) {
+				product.addStock(-difference); //tem que ser negativo para garantir que se torne positiva e aumente no estoque
+			}
+
+			productRepository.save(product);
+
+			checkItem.setQuantity(item.getQuantity());
+		}
+
+		return repository.save(order);
 	}
 
 	public Order addNewItems(Long orderId, List<OrderItem> newItems) {
 		Order order = repository.findById(orderId).orElseThrow(
 				() -> new IllegalArgumentException("Pedido não encontrado"));
 
+		if(order.getStatus() != OrderStatus.AGUARDANDO_PAGAMENTO){
+			throw new IllegalArgumentException("Pagamento já efetuado, gerar um novo pedido");
+		}
 
-		for (OrderItem Item : newItems) {
-			OrderItem existingItem = order.getItems().stream()
-					.filter(item -> item.getProduct().getId().equals(Item.getProduct().getId()))
+		for (OrderItem item : newItems) {
+			OrderItem checkItem = order.getItems().stream()
+					.filter(fi -> fi.getProduct().getId().equals(item.getProduct().getId()))
 					.findFirst()
 					.orElse(null);
 
-			if (existingItem != null) {
-				existingItem.setQuantity(existingItem.getQuantity() + Item.getQuantity());
+			if (checkItem != null) {
+				checkItem.setQuantity(checkItem.getQuantity() + item.getQuantity());
 			} else {
-				Product product = productRepository.findById(Item.getProduct().getId()).orElseThrow(
+				Product product = productRepository.findById(item.getProduct().getId()).orElseThrow(
 						() -> new IllegalArgumentException("Produto não existe"));
+				
+				product.removeStock(item.getQuantity());
+				productRepository.save(product);
+				
+				item.setProduct(product);
+				item.setPrice(product.getPrice());
+				item.setOrder(order); // Garante o vínculo entre eles
+				itemRepository.save(item);
 
-				Item.setProduct(product);
-				Item.setPrice(product.getPrice());
-				Item.setOrder(order); // Garante o vínculo entre eles
-				itemRepository.save(Item);
-
-				order.getItems().add(Item); // Adiciona o item na lista do pedido
+				order.getItems().add(item); // Adiciona o item na lista do pedido
 			}
 		}
 
 		return repository.save(order);
 	}
+
 }

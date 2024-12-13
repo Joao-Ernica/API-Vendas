@@ -72,6 +72,7 @@ public class testConfig implements CommandLineRunner {
 				.name("Trilogia, O Senhor dos Aneis")
 				.description("Uma obra prima escrita por J.R.R Tolkien")
 				.price(BigDecimal.valueOf(159.69))
+				.stock(50)
 				.categories(Set.of(cat, cat1))
 				.build();
 
@@ -79,6 +80,7 @@ public class testConfig implements CommandLineRunner {
 				.name("Harry Potter e a Pedra Filosofal")
 				.description("Primeiro livro da série Harry Potter, escrito por J.K. Rowling")
 				.price(BigDecimal.valueOf(49.90))
+				.stock(50)
 				.categories(Set.of(cat1))
 				.build();
 
@@ -86,6 +88,7 @@ public class testConfig implements CommandLineRunner {
 				.name("Duna")
 				.description("Um clássico da ficção científica, escrito por Frank Herbert")
 				.price(BigDecimal.valueOf(89.90))
+				.stock(50)
 				.categories(Set.of(cat2))
 				.build();
 
@@ -93,6 +96,7 @@ public class testConfig implements CommandLineRunner {
 				.name("O Hobbit")
 				.description("Aventuras de Bilbo Bolseiro, escrito por J.R.R. Tolkien")
 				.price(BigDecimal.valueOf(59.90))
+				.stock(50)
 				.categories(Set.of(cat2))
 				.build();
 
@@ -100,6 +104,7 @@ public class testConfig implements CommandLineRunner {
 				.name("As Crônicas de Nárnia")
 				.description("Uma série de fantasia escrita por C.S. Lewis")
 				.price(BigDecimal.valueOf(99.90))
+				.stock(50)
 				.categories(Set.of(cat1))
 				.build();
 
@@ -108,6 +113,7 @@ public class testConfig implements CommandLineRunner {
 				.name("O Nome do Vento")
 				.description("Uma obra de fantasia e aventura escrita por Patrick Rothfuss")
 				.price(BigDecimal.valueOf(59.90))
+				.stock(50)
 				.categories(Set.of(cat, cat1))
 				.build();
 
@@ -115,6 +121,7 @@ public class testConfig implements CommandLineRunner {
 				.name("Jogos Vorazes")
 				.description("Uma série de ficção científica e aventura escrita por Suzanne Collins")
 				.price(BigDecimal.valueOf(49.90))
+				.stock(50)
 				.categories(Set.of(cat1, cat2))
 				.build();
 

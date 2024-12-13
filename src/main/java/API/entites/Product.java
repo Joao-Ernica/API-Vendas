@@ -1,13 +1,11 @@
 package API.entites;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.text.Bidi;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,6 +27,7 @@ public class Product implements Serializable {
 
 	private String name;
 	private String description;
+	private Integer stock;
 	private BigDecimal price;
 
 	@ManyToMany
@@ -43,6 +42,21 @@ public class Product implements Serializable {
 			set.add(x.getOrder());
 		}
 		return set;
+	}
+
+	public void addStock(Integer quantity){
+		if(quantity > 0){
+			this.stock += quantity;
+		}
+	}
+	public void removeStock(Integer quantity){
+		if(quantity > 0  & this.stock >= quantity){
+			this.stock -= quantity;
+		}
+		else{
+			throw new IllegalArgumentException("Estoque insuficiente");
+		}
+
 	}
 
 }

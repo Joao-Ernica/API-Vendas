@@ -47,12 +47,11 @@ public class OrderController {
 		return mapping.toOrderResponse(insert);
 	}
 
-	@PutMapping("{id}")
-	public OrderResponse update(@PathVariable Long id, @RequestBody OrderRequest obj){
-		Order order = mapping.toOrder(obj);
-		Order update = service.update(id, order);
-		return mapping.toOrderResponse(update);
-
+	@PutMapping("{orderId}")
+	public OrderResponse update(@PathVariable Long orderId, @RequestBody List<OrderItemRequest> updatedItem) {
+		List<OrderItem> orderItems = orderItemMapping.toOrderItemList(updatedItem);
+		Order updatedOrder = service.update(orderId, orderItems);
+		return mapping.toOrderResponse(updatedOrder);
 	}
 
 	@PutMapping("/{orderId}/addNewItems")
