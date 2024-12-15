@@ -1,5 +1,6 @@
 package API.entites;
 
+import API.entites.enums.PaymentStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -28,6 +30,8 @@ public class Payment implements Serializable {
 	@EqualsAndHashCode.Include
 	private Long id;
 
+	private BigDecimal valor;
+
 	@CreatedDate
 	@Column(updatable = false)
 	@JsonFormat(pattern = "dd-MM-yyyy HH:mm")
@@ -37,5 +41,8 @@ public class Payment implements Serializable {
 	@MapsId // usar o mesmo id
 	@JsonIgnore
 	private Order order;
+
+	@Enumerated(EnumType.STRING)
+	private PaymentStatus status;
 
 }

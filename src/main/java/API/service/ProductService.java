@@ -19,8 +19,8 @@ public class ProductService {
 	}
 
 	public Product findById(Long id) {
-		return repository.findById(id).orElseThrow(()
-				-> new IllegalArgumentException("Id não encotrado"));
+		return repository.findById(id).orElseThrow(
+				() -> new IllegalArgumentException("Id não encotrado"));
 	}
 
 	public Product insert(Product obj) {
@@ -28,8 +28,8 @@ public class ProductService {
 	}
 
 	public Product upadate(Long id, Product obj){
-		Product byId = repository.findById(id).orElseThrow(()
-				-> new IllegalArgumentException("Id não encontrado"));
+		Product byId = repository.findById(id).orElseThrow(
+				() -> new IllegalArgumentException("Id não encontrado"));
 		BeanUtils.copyProperties(obj, byId, "id");
 		return repository.save(byId);
 	}

@@ -20,7 +20,7 @@ public class UserService {
 	}
 
 	public User findByCPF(String CPF){
-		return repository.findById(CPF).orElseThrow(()
-				-> new IllegalArgumentException("CPF não encontrado"));
+		return repository.findById(CPF).orElseThrow(
+				() -> new IllegalArgumentException("CPF não encontrado"));
 	}
 }
