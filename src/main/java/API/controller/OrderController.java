@@ -40,6 +40,12 @@ public class OrderController {
 		return mapping.toOrderResponse(byId);
 	}
 
+	@GetMapping("ByUserId/{cpf}")
+	public List<OrderResponse> findByUserCpf(@PathVariable String cpf){
+		List<Order> byUserCpf = service.findByUserCpf(cpf);
+		return mapping.toOrderResponseList(byUserCpf);
+	}
+
 	@PostMapping
 	public OrderResponse insert (@RequestBody OrderRequest request){
 		Order order = mapping.toOrder(request);
@@ -59,12 +65,5 @@ public class OrderController {
 		List<OrderItem> orderItems = orderItemMapping.toOrderItemList(newItems);
 		Order order = service.addNewItems(orderId, orderItems);
 		return mapping.toOrderResponse(order);
-	}
-
-	@GetMapping("ByUserId/{cpf}")
-	public List<OrderResponse> findByUserCpf(@PathVariable String cpf){
-		List<Order> byUserCpf = service.findByUserCpf(cpf);
-		return mapping.toOrderResponseList(byUserCpf);
-
 	}
 }

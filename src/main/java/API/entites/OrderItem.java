@@ -37,7 +37,6 @@ public class OrderItem implements Serializable {
 		this.total = calculoTotal();
 	}
 
-
 	public BigDecimal calculoTotal(){//utilizei BigDecimal por ser mais preciso e ja possuir os metodos necessarios
 		return price.multiply(new BigDecimal(quantity));
 	}

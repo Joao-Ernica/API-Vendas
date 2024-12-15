@@ -23,4 +23,5 @@ public class PaymentController {
 	public List<Payment> findAll(){
 		return service.findAll();
 	}
+
 }

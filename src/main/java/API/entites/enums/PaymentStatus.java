@@ -5,19 +5,16 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public enum OrderStatus {
+public enum PaymentStatus {
 
-	AGUARDANDO_PAGAMENTO(1),
+	PEDINDO(1),
 	PAGAMENTO_CONFIRMADO(2),
-	EM_TRASPORTE(3),
-	ENTREGUE(4),
-	CANCELADO(5);
-
+	CANCELAODO(3);
 
 	private final int code;
 
-	public static OrderStatus valueOf(int code){
-		for(OrderStatus status : OrderStatus.values()){
+	public static PaymentStatus valueOf(int code){
+		for(PaymentStatus status : PaymentStatus.values()){
 			if(status.getCode() == code){
 				return status;
 			}

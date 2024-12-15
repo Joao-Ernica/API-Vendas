@@ -39,14 +39,22 @@ public class OrderService {
 				-> new IllegalArgumentException("Id não encontrado"));
 	}
 
+	public List<Order> findByUserCpf(String cpf){
+		try {
+			return  repository.findByUserCpf(cpf);
+		}catch (EntityNotFoundException e){
+			throw new IllegalArgumentException("Usuario não encotrado");
+		}
+	}
+
 	/*
 		//tentei de tudo, a unica solução que encotrei foi separar o Cpf ates de ir pro service
 		ou mandar o OrderRequest para o service
 	*/
 
-	public Order insert(Order order, String userCpf) {
-		User user = userRepository.findById(userCpf).orElseThrow(
-				() -> new IllegalArgumentException(userCpf + " Usuário não encontrado"));
+	public Order insert(Order order, String cpf) {
+		User user = userRepository.findById(cpf).orElseThrow(
+				() -> new IllegalArgumentException(" Usuário não encontrado"));
 
 		order.setUser(user);
 
@@ -54,40 +62,36 @@ public class OrderService {
 			Product product = productRepository.findById(item.getProduct().getId()).orElseThrow(
 					() -> new IllegalArgumentException("Produto não existe"));
 
-			product.removeStock(item.getQuantity());
-		}
-
-		Order savedOrder = repository.save(order);
-
-		for (OrderItem item : savedOrder.getItems()) {
-			Product product = productRepository.findById(item.getProduct().getId()).orElseThrow(
-					() -> new IllegalArgumentException("Produto não existe"));
-
+			product.removeStock(item.getQuantity()); // ja verifica o stock
 			productRepository.save(product);
 
 			item.setProduct(product);
 			item.setPrice(product.getPrice());
-			item.setOrder(savedOrder);
-			itemRepository.save(item);
 		}
+
+		Order savedOrder = repository.save(order);
+
+		//.forEach simplifica o for
+		order.getItems().forEach(item -> { //associando o item ao order salvo
+			item.setOrder(savedOrder); itemRepository.save(item);
+		});
 
 		return savedOrder;
 	}
-
 
 	public Order update(Long orderId, List<OrderItem> updatedItems) {
 		Order order = repository.findById(orderId).orElseThrow(
 				() -> new IllegalArgumentException("Pedido não encontrado"));
 
 		if(order.getStatus() != OrderStatus.AGUARDANDO_PAGAMENTO){
-			throw new IllegalArgumentException("Pagamento já efetuado, gerar um novo pedido");
+			throw new IllegalArgumentException("Pagamento já foi efetuado, gerar um novo pedido");
 		}
 
 		for (OrderItem item : updatedItems) {
 			OrderItem checkItem = order.getItems().stream()
 					.filter(orderItem -> orderItem.getProduct().getId().equals(item.getProduct().getId()))
 					.findFirst() //não precisa percorrer tudo já que existe apenas um Id para cada produto
-					.orElseThrow(() -> new IllegalArgumentException("Item não encontrado no pedido"));
+					.orElseThrow(() -> new IllegalArgumentException("Produto não encontrado no pedido"));
 
 			int difference = item.getQuantity() - checkItem.getQuantity();
 			
@@ -142,13 +146,4 @@ public class OrderService {
 
 		return repository.save(order);
 	}
-
-	public List<Order> findByUserCpf(String cpf){
-		try {
-			return  repository.findByUserCpf(cpf);
-		}catch (EntityNotFoundException e){
-			throw new IllegalArgumentException("Usuario não encotrado");
-		}
-	}
-
 }
