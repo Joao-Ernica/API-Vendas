@@ -126,15 +126,13 @@ public class OrderService {
 					.findFirst()
 					.orElse(null);
 
+			Product product = productRepository.findById(item.getProduct().getId()).orElseThrow(
+					() -> new IllegalArgumentException("Produto não existe"));
+
 			if (checkItem != null) {
 				checkItem.setQuantity(checkItem.getQuantity() + item.getQuantity());
+
 			} else {
-				Product product = productRepository.findById(item.getProduct().getId()).orElseThrow(
-						() -> new IllegalArgumentException("Produto não existe"));
-				
-				product.removeStock(item.getQuantity());
-				productRepository.save(product);
-				
 				item.setProduct(product);
 				item.setPrice(product.getPrice());
 				item.setOrder(order); // Garante o vínculo entre eles
@@ -142,6 +140,9 @@ public class OrderService {
 
 				order.getItems().add(item); // Adiciona o item na lista do pedido
 			}
+
+			product.removeStock(item.getQuantity());
+			productRepository.save(product);
 		}
 
 		return repository.save(order);

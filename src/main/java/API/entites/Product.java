@@ -50,7 +50,7 @@ public class Product implements Serializable {
 		}
 	}
 	public void removeStock(Integer quantity){
-		if(quantity > 0  & this.stock >= quantity){
+		if(this.stock >= quantity){
 			this.stock -= quantity;
 		}
 		else{

@@ -26,6 +26,8 @@ public class OrderItem implements Serializable {
 
 	private Integer quantity;
 	private BigDecimal price;
+
+
 	private BigDecimal total;
 
 	@Builder
@@ -40,6 +42,13 @@ public class OrderItem implements Serializable {
 	public BigDecimal calculateTotal(){ //utilizei BigDecimal por ser mais preciso e ja possuir os metodos necessarios
 		return price.multiply(new BigDecimal(quantity));
 	}
+
+	@PreUpdate
+	public void calculateTota() {
+		this.total = price.multiply(new BigDecimal(quantity));
+	}
+
+	public BigDecimal getTotal() { return price.multiply(new BigDecimal(quantity)); }
 
 	public void setPrice(BigDecimal price) {
 		this.price = price;

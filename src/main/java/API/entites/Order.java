@@ -48,18 +48,15 @@ public class Order implements Serializable {
 	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
 	private Payment payment;
 
-//	private BigDecimal Total;
+	private BigDecimal total;
 
 	@OneToMany(mappedBy = "id.order")
 	private Set<OrderItem> items = new HashSet<>();
-
-
-//	@PostLoad
-//	@PostPersist
-//	@PostUpdate
-//	public void updateTotal() {
-//		this.total = calculateTotal();
-//	}
+	
+	@PostUpdate
+	public void updateTotal() {
+		this.total = calculateTotal();
+	}
 
 	public void addItem(OrderItem item) {
 		items.add(item);
