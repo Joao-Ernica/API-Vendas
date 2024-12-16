@@ -34,16 +34,16 @@ public class OrderItem implements Serializable {
 		this.id.setProduct(product);
 		this.quantity = quantity;
 		this.price = price;
-		this.total = calculoTotal();
+		this.total = calculateTotal();
 	}
 
-	public BigDecimal calculoTotal(){//utilizei BigDecimal por ser mais preciso e ja possuir os metodos necessarios
+	public BigDecimal calculateTotal(){ //utilizei BigDecimal por ser mais preciso e ja possuir os metodos necessarios
 		return price.multiply(new BigDecimal(quantity));
 	}
 
 	public void setPrice(BigDecimal price) {
 		this.price = price;
-		this.total = calculoTotal();
+		this.total = calculateTotal();
 		}
 
 	@JsonIgnore

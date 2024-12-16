@@ -13,5 +13,5 @@ import java.math.BigDecimal;
 @Getter
 public class PaymentRequest {
 
-	private BigDecimal valor;
+	private BigDecimal amountPaid;
 }

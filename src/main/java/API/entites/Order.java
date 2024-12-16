@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
@@ -47,8 +48,18 @@ public class Order implements Serializable {
 	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
 	private Payment payment;
 
+//	private BigDecimal Total;
+
 	@OneToMany(mappedBy = "id.order")
 	private Set<OrderItem> items = new HashSet<>();
+
+
+//	@PostLoad
+//	@PostPersist
+//	@PostUpdate
+//	public void updateTotal() {
+//		this.total = calculateTotal();
+//	}
 
 	public void addItem(OrderItem item) {
 		items.add(item);
@@ -64,4 +75,9 @@ public class Order implements Serializable {
 		}
 	}
 
+	public BigDecimal calculateTotal() {
+		return items.stream()
+				.map(OrderItem::getTotal)
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
 }

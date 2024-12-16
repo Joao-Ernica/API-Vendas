@@ -30,7 +30,7 @@ public class Payment implements Serializable {
 	@EqualsAndHashCode.Include
 	private Long id;
 
-	private BigDecimal valor;
+	private BigDecimal amountPaid;
 
 	@CreatedDate
 	@Column(updatable = false)

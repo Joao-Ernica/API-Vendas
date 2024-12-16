@@ -27,7 +27,7 @@ public class PaymentController {
 		return service.findAll();
 	}
 
-	@PutMapping("{orderId}")
+	@PostMapping("{orderId}")
 	public PaymentResponse makePayment(@PathVariable Long orderId, @RequestBody PaymentRequest request){
 		Payment payment = mapping.toPayment(request);
 		Payment make = service.makePayment(payment, orderId);
