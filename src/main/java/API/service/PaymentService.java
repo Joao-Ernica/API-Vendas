@@ -29,6 +29,10 @@ public class PaymentService {
 		return repository.findAll();
 	}
 
+	public List<Payment> findByStatus(PaymentStatus status){
+		return repository.findByStatus(status);
+	}
+
 	public Payment makePayment(Payment payment, Long orderId) {
 		Order order = orderRepository.findById(orderId).orElseThrow(
 				() -> new IllegalArgumentException("Order não encontrada"));

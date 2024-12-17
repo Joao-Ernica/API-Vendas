@@ -1,6 +1,7 @@
 package API.controller;
 
 import API.entites.Payment;
+import API.entites.enums.PaymentStatus;
 import API.entites.request.PaymentRequest;
 import API.entites.response.PaymentResponse;
 import API.mapper.PaymentMapping;
@@ -34,4 +35,9 @@ public class PaymentController {
 		return mapping.toPaymentResponse(make);
 	}
 
+	@GetMapping("status/{status}")
+	public List<PaymentResponse> findByStatus(@PathVariable PaymentStatus status){
+		List<Payment> byStatus = service.findByStatus(status);
+		return mapping.toPaymentResponseList(byStatus);
+	}
 }

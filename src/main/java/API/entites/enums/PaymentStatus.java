@@ -9,7 +9,7 @@ public enum PaymentStatus {
 
 	PEDINDO(1),
 	PAGAMENTO_CONFIRMADO(2),
-	CANCELAODO(3);
+	CANCELADO(3);
 
 	private final int code;
 
