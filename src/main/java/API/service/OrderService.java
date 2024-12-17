@@ -47,6 +47,16 @@ public class OrderService {
 		}
 	}
 
+	public List<Order> findByOrderedData(String data) {
+		if (data.equalsIgnoreCase("ASC")) {
+			return repository.findAllByOrderByDateAsc();
+		} else if (data.equalsIgnoreCase("DESC")) {
+			return repository.findAllByOrderByDateDesc();
+		} else {
+			throw new IllegalArgumentException("Utilize 'ASC' para crescente ou 'DESC' para decrescente.");
+		}
+	}
+
 	/*
 		//tentei de tudo, a unica solução que encotrei foi separar o Cpf ates de ir pro service
 		ou mandar o OrderRequest para o service

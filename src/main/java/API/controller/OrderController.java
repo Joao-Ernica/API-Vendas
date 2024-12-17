@@ -46,6 +46,12 @@ public class OrderController {
 		return mapping.toOrderResponseList(byUserCpf);
 	}
 
+	@GetMapping("data/{data}")
+	public List<OrderResponse> findByOrderedData(@PathVariable String data){
+		List<Order> byOrderedData = service.findByOrderedData(data);
+		return mapping.toOrderResponseList(byOrderedData);
+	}
+
 	@PostMapping
 	public OrderResponse insert (@RequestBody OrderRequest request){
 		Order order = mapping.toOrder(request);

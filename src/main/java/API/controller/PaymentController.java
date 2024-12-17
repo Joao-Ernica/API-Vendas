@@ -28,16 +28,16 @@ public class PaymentController {
 		return service.findAll();
 	}
 
+	@GetMapping("status/{status}")
+	public List<PaymentResponse> findByStatus(@PathVariable PaymentStatus status){
+		List<Payment> byStatus = service.findByStatus(status);
+		return mapping.toPaymentResponseList(byStatus);
+	}
+
 	@PostMapping("{orderId}")
 	public PaymentResponse makePayment(@PathVariable Long orderId, @RequestBody PaymentRequest request){
 		Payment payment = mapping.toPayment(request);
 		Payment make = service.makePayment(payment, orderId);
 		return mapping.toPaymentResponse(make);
-	}
-
-	@GetMapping("status/{status}")
-	public List<PaymentResponse> findByStatus(@PathVariable PaymentStatus status){
-		List<Payment> byStatus = service.findByStatus(status);
-		return mapping.toPaymentResponseList(byStatus);
 	}
 }
