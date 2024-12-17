@@ -12,7 +12,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -51,30 +50,30 @@ public class Order implements Serializable {
 	private BigDecimal total;
 
 	@OneToMany(mappedBy = "id.order")
+	@Builder.Default //Lombok não inicializa construtores com coleções, preciso disso para o metodo upadateTotal
 	private Set<OrderItem> items = new HashSet<>();
-	
-	@PostUpdate
+
+	@PostLoad
+	@PreUpdate
+	@PrePersist
 	public void updateTotal() {
-		this.total = calculateTotal();
-	}
-
-	public void addItem(OrderItem item) {
-		items.add(item);
-		item.setOrder(this);
-	}
-
-	public void addItems(List<OrderItem> newItems) {
-		for (OrderItem item : newItems) {
-			if (!items.contains(item)) {
-				item.setOrder(this);
-				addItem(item);
-			}
-		}
-	}
-
-	public BigDecimal calculateTotal() {
-		return items.stream()
+		this.total = items.stream()
 				.map(OrderItem::getTotal)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
+
+//	public void addItem(OrderItem item) {
+//		items.add(item);
+//		item.setOrder(this);
+//	}
+//
+//	public void addItems(List<OrderItem> newItems) {
+//		for (OrderItem item : newItems) {
+//			if (!items.contains(item)) {
+//				item.setOrder(this);
+//				addItem(item);
+//			}
+//		}
+//	}
 }
+

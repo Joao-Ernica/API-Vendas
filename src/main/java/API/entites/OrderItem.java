@@ -27,7 +27,6 @@ public class OrderItem implements Serializable {
 	private Integer quantity;
 	private BigDecimal price;
 
-
 	private BigDecimal total;
 
 	@Builder
@@ -36,24 +35,20 @@ public class OrderItem implements Serializable {
 		this.id.setProduct(product);
 		this.quantity = quantity;
 		this.price = price;
-		this.total = calculateTotal();
 	}
 
-	public BigDecimal calculateTotal(){ //utilizei BigDecimal por ser mais preciso e ja possuir os metodos necessarios
+	public BigDecimal calculateTot(){ //utilizei BigDecimal por ser mais preciso e ja possuir os metodos necessarios
 		return price.multiply(new BigDecimal(quantity));
 	}
 
-	@PreUpdate
-	public void calculateTota() {
+	@PostLoad //para Post
+	@PreUpdate // para PUT
+	@PrePersist // ativação inicial
+	public void calculateTotal() {
 		this.total = price.multiply(new BigDecimal(quantity));
 	}
 
 	public BigDecimal getTotal() { return price.multiply(new BigDecimal(quantity)); }
-
-	public void setPrice(BigDecimal price) {
-		this.price = price;
-		this.total = calculateTotal();
-		}
 
 	@JsonIgnore
 	public Order getOrder() {

@@ -33,7 +33,7 @@ public class PaymentService {
 		Order order = orderRepository.findById(orderId).orElseThrow(
 				() -> new IllegalArgumentException("Order não encontrada"));
 
-		BigDecimal totalOrderValue = order.calculateTotal();
+		BigDecimal totalOrderValue = order.getTotal();
 		if (totalOrderValue == null) {
 			throw new IllegalArgumentException("O valor total do pedido não pode ser nulo.");
 		}
