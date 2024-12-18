@@ -93,6 +93,8 @@ public class OrderService {
 		Order order = repository.findById(orderId).orElseThrow(
 				() -> new IllegalArgumentException("Pedido não encontrado"));
 
+		order.checkIfCancelled();
+
 		if(order.getStatus() != OrderStatus.AGUARDANDO_PAGAMENTO){
 			throw new IllegalArgumentException("Pagamento já foi efetuado, gerar um novo pedido");
 		}
@@ -126,6 +128,8 @@ public class OrderService {
 		Order order = repository.findById(orderId).orElseThrow(
 				() -> new IllegalArgumentException("Pedido não encontrado"));
 
+		order.checkIfCancelled();
+
 		if(order.getStatus() != OrderStatus.AGUARDANDO_PAGAMENTO){
 			throw new IllegalArgumentException("Pagamento já efetuado, gerar um novo pedido");
 		}
@@ -152,6 +156,25 @@ public class OrderService {
 			}
 
 			product.removeStock(item.getQuantity());
+			productRepository.save(product);
+		}
+
+		return repository.save(order);
+	}
+
+	public Order cancelOrder(Long orderId){
+		Order order = repository.findById(orderId).orElseThrow(
+				() -> new IllegalArgumentException("Pedido não encontrado"));
+
+//		if(order.getPayment().getStatus() == PaymentStatus.PAGAMENTO_CONFIRMADO) {
+//			throw new IllegalArgumentException("Pedido já foi pago");
+//		}
+
+		order.setStatus(OrderStatus.CANCELADO);
+
+		for(OrderItem item : order.getItems()){
+			Product product = item.getProduct();
+			product.addStock(item.getQuantity());
 			productRepository.save(product);
 		}
 

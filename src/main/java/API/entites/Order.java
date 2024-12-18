@@ -1,6 +1,7 @@
 package API.entites;
 
 import API.entites.enums.OrderStatus;
+import API.entites.enums.PaymentStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
@@ -53,6 +54,10 @@ public class Order implements Serializable {
 	@Builder.Default //Lombok não inicializa construtores com coleções, preciso disso para o metodo upadateTotal
 	private Set<OrderItem> items = new HashSet<>();
 
+	/*
+	sempre manter atualizado o valor todal do pedido
+	 */
+
 	@PostLoad
 	@PreUpdate
 	@PrePersist
@@ -60,6 +65,12 @@ public class Order implements Serializable {
 		this.total = items.stream()
 				.map(OrderItem::getTotal)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
+	public void checkIfCancelled (){
+		if(this.status == OrderStatus.CANCELADO){
+			throw new IllegalArgumentException("Pedido já foi cancelado e não pode ser alterado");
+		}
 	}
 
 //	public void addItem(OrderItem item) {

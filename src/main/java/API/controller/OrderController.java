@@ -72,4 +72,10 @@ public class OrderController {
 		Order order = service.addNewItems(orderId, orderItems);
 		return mapping.toOrderResponse(order);
 	}
+
+	@PutMapping("cancelation/{orderId}")
+	public OrderResponse cancelOrder(@PathVariable Long orderId){
+		Order order = service.cancelOrder(orderId);
+		return mapping.toOrderResponse(order);
+	}
 }
