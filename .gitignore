@@ -1,2 +1,14 @@
 /.idea
 /build
+/out
+*.class
+*.log
+*.jar
+*.war
+*.ear
+*.iml
+*.ipr
+*.iws
+/.gradle
+/.mvn
+/target

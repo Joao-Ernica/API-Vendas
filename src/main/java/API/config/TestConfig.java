@@ -18,7 +18,7 @@ import java.util.Set;
 @Configuration
 @EnableJpaAuditing
 @Profile("test")
-public class testConfig implements CommandLineRunner {
+public class TestConfig implements CommandLineRunner {
 
 	@Autowired
 	private UserRepository userRepository;
