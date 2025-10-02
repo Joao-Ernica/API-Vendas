@@ -18,10 +18,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
-	@Autowired
+	// @Autowired  Melhor usar o final com o @RequiredArgsConstructor
 	private final UserService service;
 
-	@Autowired
 	private final UserMapping mapping;
 
 	@GetMapping

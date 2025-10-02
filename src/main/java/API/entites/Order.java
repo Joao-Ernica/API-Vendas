@@ -1,7 +1,6 @@
 package API.entites;
 
 import API.entites.enums.OrderStatus;
-import API.entites.enums.PaymentStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
@@ -87,4 +86,3 @@ public class Order implements Serializable {
 //		}
 //	}
 }
-

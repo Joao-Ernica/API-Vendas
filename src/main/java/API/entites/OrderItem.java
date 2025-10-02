@@ -37,10 +37,6 @@ public class OrderItem implements Serializable {
 		this.price = price;
 	}
 
-	public BigDecimal calculateTot(){ //utilizei BigDecimal por ser mais preciso e ja possuir os metodos necessarios
-		return price.multiply(new BigDecimal(quantity));
-	}
-
 	@PostLoad //para Post
 	@PreUpdate // para PUT
 	@PrePersist // ativação inicial
@@ -48,7 +44,9 @@ public class OrderItem implements Serializable {
 		this.total = price.multiply(new BigDecimal(quantity));
 	}
 
-	public BigDecimal getTotal() { return price.multiply(new BigDecimal(quantity)); }
+	public BigDecimal getTotal() {
+		return price.multiply(new BigDecimal(quantity));
+	}
 
 	@JsonIgnore
 	public Order getOrder() {

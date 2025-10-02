@@ -17,10 +17,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PaymentController {
 
-	@Autowired
+	// @Autowired  Melhor usar o final com o @RequiredArgsConstructor
 	private final PaymentService service;
 
-	@Autowired
 	private final PaymentMapping mapping;
 
 	@GetMapping

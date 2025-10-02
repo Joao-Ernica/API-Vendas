@@ -1,6 +1,6 @@
 package API.entites.response;
 
-import API.entites.Payment;;
+import API.entites.Payment;
 import API.entites.enums.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -16,10 +16,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryController {
 
-	@Autowired
+	// @Autowired  Melhor usar o final com o @RequiredArgsConstructor
 	private final CategoryService service;
 
-	@Autowired
 	private final CategoryMapping mapping;
 
 	@GetMapping

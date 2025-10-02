@@ -19,13 +19,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderController {
 
-	@Autowired
 	private final OrderMapping mapping;
 
-	@Autowired
 	private final OrderItemMapping orderItemMapping;
 
-	@Autowired
+	// @Autowired  Melhor usar o final com o @RequiredArgsConstructor
 	private final OrderService service;
 
 	@GetMapping
